@@ -6,13 +6,13 @@ namespace Locacao
 {
     internal class Item
     {
-        //public required string NameI { get; set; }
-        //public required string ContactI { get; set; }
+        public required string NameI { get; set; }
+        public required string ValueI { get; set; }
 
 
-        //public void CadastrarItem(List<Item> ItemList)
-        //{
-        //    ItemList.Add(this);
-        //}
+        public void CadastrarItem(List<Item> ItemList)
+        {
+            ItemList.Add(this);
+        }
     }
 }
