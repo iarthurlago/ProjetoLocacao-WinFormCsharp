@@ -40,14 +40,14 @@
             tabControl1 = new TabControl();
             tabPage11 = new TabPage();
             tabPage2 = new TabPage();
-            tabPage3 = new TabPage();
-            textBox5 = new TextBox();
-            textBox3 = new TextBox();
-            textBox4 = new TextBox();
-            label6 = new Label();
-            label7 = new Label();
-            button2 = new Button();
             listBox2 = new ListBox();
+            button2 = new Button();
+            label7 = new Label();
+            label6 = new Label();
+            textBox3 = new TextBox();
+            textBox5 = new TextBox();
+            tabPage3 = new TabPage();
+            textBox4 = new TextBox();
             tabControl1.SuspendLayout();
             tabPage11.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -196,59 +196,13 @@
             tabPage2.UseVisualStyleBackColor = true;
             tabPage2.Click += tabPage2_Click;
             // 
-            // tabPage3
+            // listBox2
             // 
-            tabPage3.Location = new Point(4, 29);
-            tabPage3.Margin = new Padding(3, 4, 3, 4);
-            tabPage3.Name = "tabPage3";
-            tabPage3.Padding = new Padding(3, 4, 3, 4);
-            tabPage3.Size = new Size(794, 420);
-            tabPage3.TabIndex = 2;
-            tabPage3.Text = "Locacao";
-            tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // textBox5
-            // 
-            textBox5.Location = new Point(283, 146);
-            textBox5.Name = "textBox5";
-            textBox5.Size = new Size(125, 27);
-            textBox5.TabIndex = 0;
-            textBox5.TextChanged += textBox5_TextChanged;
-            // 
-            // textBox3
-            // 
-            textBox3.Location = new Point(283, 208);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(125, 27);
-            textBox3.TabIndex = 0;
-            textBox3.TextChanged += textBox5_TextChanged;
-            // 
-            // textBox4
-            // 
-            textBox4.Location = new Point(283, 208);
-            textBox4.Name = "textBox4";
-            textBox4.Size = new Size(125, 27);
-            textBox4.TabIndex = 1;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(227, 149);
-            label6.Name = "label6";
-            label6.Size = new Size(53, 20);
-            label6.TabIndex = 1;
-            label6.Text = "Nome:";
-            label6.Click += label6_Click;
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(227, 211);
-            label7.Name = "label7";
-            label7.Size = new Size(43, 20);
-            label7.TabIndex = 1;
-            label7.Text = "Valor";
-            label7.Click += label7_Click;
+            listBox2.FormattingEnabled = true;
+            listBox2.Location = new Point(521, 149);
+            listBox2.Name = "listBox2";
+            listBox2.Size = new Size(150, 104);
+            listBox2.TabIndex = 3;
             // 
             // button2
             // 
@@ -260,13 +214,59 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
-            // listBox2
+            // label7
             // 
-            listBox2.FormattingEnabled = true;
-            listBox2.Location = new Point(521, 149);
-            listBox2.Name = "listBox2";
-            listBox2.Size = new Size(150, 104);
-            listBox2.TabIndex = 3;
+            label7.AutoSize = true;
+            label7.Location = new Point(232, 211);
+            label7.Name = "label7";
+            label7.Size = new Size(46, 20);
+            label7.TabIndex = 1;
+            label7.Text = "Valor:";
+            label7.Click += label7_Click;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(227, 149);
+            label6.Name = "label6";
+            label6.Size = new Size(53, 20);
+            label6.TabIndex = 1;
+            label6.Text = "Nome:";
+            label6.Click += label6_Click;
+            // 
+            // textBox3
+            // 
+            textBox3.Location = new Point(283, 208);
+            textBox3.Name = "textBox3";
+            textBox3.Size = new Size(125, 27);
+            textBox3.TabIndex = 0;
+            textBox3.TextChanged += textBox5_TextChanged;
+            // 
+            // textBox5
+            // 
+            textBox5.Location = new Point(283, 146);
+            textBox5.Name = "textBox5";
+            textBox5.Size = new Size(125, 27);
+            textBox5.TabIndex = 0;
+            textBox5.TextChanged += textBox5_TextChanged;
+            // 
+            // tabPage3
+            // 
+            tabPage3.Location = new Point(4, 29);
+            tabPage3.Margin = new Padding(3, 4, 3, 4);
+            tabPage3.Name = "tabPage3";
+            tabPage3.Padding = new Padding(3, 4, 3, 4);
+            tabPage3.Size = new Size(794, 420);
+            tabPage3.TabIndex = 2;
+            tabPage3.Text = "Locacao";
+            tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // textBox4
+            // 
+            textBox4.Location = new Point(283, 208);
+            textBox4.Name = "textBox4";
+            textBox4.Size = new Size(125, 27);
+            textBox4.TabIndex = 1;
             // 
             // Form1
             // 

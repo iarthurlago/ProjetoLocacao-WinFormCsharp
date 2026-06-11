@@ -5,7 +5,7 @@ using System.Text;
 namespace Locacao
 {
 
-    internal class Cliente
+    public class Cliente
     {
         public required string Name { get; set; } 
         public required string Contact { get; set; }

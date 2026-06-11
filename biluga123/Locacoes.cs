@@ -8,9 +8,8 @@ namespace Locacao
 {
     public class Locacao
     {
-        internal required Cliente ClienteLocacao { get; set; }
-
-        public Item ItemLocacao { get; set; }
+        public Cliente? ClienteLocacao { get; set; }
+        public Item? ItemLocacao { get; set; }
         public DateTime DataRetirada { get; set; }
         public DateTime DataPrevistaDevolucao { get; set; }
         public DateTime? DataDevolucao { get; set; } // Nullable: se for null, significa que ainda não foi devolvido (Ativa)

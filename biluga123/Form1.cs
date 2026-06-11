@@ -124,7 +124,12 @@ namespace Locacao
                 string textoParaExibir = clienteSalvo.Name + " - " + clienteSalvo.Contact;
                 listBox1.Items.Add(textoParaExibir);
             }
-            
+
+            foreach (Cliente contatinho in ContactList)
+            {
+                // ...e adiciona na ListBox da tela!
+                listBox1.Items.Add(contatinho);
+            }
 
         }
 
@@ -143,7 +148,12 @@ namespace Locacao
                 listBox2.Items.Add(textoParaExibirI);
 
             }
-  
+            foreach (Item itenzinhos in ValueList)
+            {
+                // ...e adiciona na ListBox da tela!
+                listBox1.Items.Add(itenzinhos);
+            }
+
         }
 
         private void tabPage1_Click(object sender, EventArgs e)
@@ -184,7 +194,7 @@ namespace Locacao
 
             if (!string.IsNullOrEmpty(nameItem) && Int64.TryParse(textBox3.Text, out Valor))
             {
-                Item novoItem = new Item { NameI = textBox5.Text, ValueI = textBox3.Text };
+                Item novoItem = new Item { NameI = textBox5.Text, ValueI = Valor};
 
                 novoItem.CadastrarItem(ItemList);
 
