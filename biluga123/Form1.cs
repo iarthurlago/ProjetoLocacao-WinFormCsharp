@@ -6,43 +6,24 @@ namespace Locacao
     {
         // 1.lista aqui fora para guardar os dados na memória do Form
         List<string> ClienteList = new List<string>();
-        List<int> ContactList = new List<int>();
+        List<long> ContactList = new List<long>();
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             //Dados
             string nameType = textBox1.Text;
-            int pass = 0;
+            Int64 ContactType;
 
-            if (!string.IsNullOrEmpty(nameType))
-            {
-                ClienteList.Add(nameType);
-
-                pass += 1;
-            }
-            else
-            {
-                // Se estiver vazio, avisa o usuário
-                MessageBox.Show("Por favor, informe nome na caixa de texto.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-
-            if (Int64.TryParse(textBox2.Text, out Int64 ContactType))
+            if (!string.IsNullOrEmpty(nameType) && Int64.TryParse(textBox2.Text, out ContactType))
             {
 
-                pass += 1;
-            }
-            else
-            {
-                // Se estiver vazio, avisa o usuário
-                MessageBox.Show("Por favor, informe seu telefone na caixa de texto.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+                string clienteCompleto = nameType + " - " + ContactType;
+                ClienteList.Add(clienteCompleto);
 
-            if (pass == 2)
-            {
                 //Fields and customs
                 button1.Enabled = false;
                 label3.Text = "✔";
@@ -52,12 +33,26 @@ namespace Locacao
                 MessageBox.Show("Você cadastrou o cliente: " + nameType + Environment.NewLine + "Número digitado: " + ContactType);
                 textBox1.Clear();
                 textBox2.Clear();
+                AtualizarTela();
+
+                //await pra evitar miss click
+                await Task.Delay(2000);
+                button1.Enabled = true;
+                label5.Text = "Pronto para um novo cadastro.";
+                label5.ForeColor = Color.Black;
+                // Criando o objeto e passando o texto dos inputs direto para o construtor
+
+                Cliente novoCliente = new Cliente { Name = textBox1.Text, Contact = textBox2.Text };
+
             }
             else
             {
+                // Se estiver vazio, avisa o usuário
+                MessageBox.Show("Nome ou Contato incorreto", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 label5.Text = "Seu Nome ou Telefone estão incorretos";
                 label5.ForeColor = Color.Red;
             }
+
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -101,6 +96,42 @@ namespace Locacao
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void AtualizarTela()
+        {
+            // PASSO CRUCIAL: Limpa a ListBox antes de redesenhar.
+            // Se não fizermos isso, toda vez que clicarmos no botão, 
+            // os nomes antigos seriam duplicados na tela.
+            listBox1.Items.Clear();
+
+            // Passa de item em item da nossa lista da memória...
+            foreach (string cliente in ClienteList)
+            {
+                // ...e adiciona na ListBox da tela!
+                listBox1.Items.Add(cliente);
+
+            }
+            foreach (int contatinho in ContactList)
+            {
+                // ...e adiciona na ListBox da tela!
+                listBox1.Items.Add(contatinho);
+            }
+
+        }
+
+        private void tabPage1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
         {
 
         }

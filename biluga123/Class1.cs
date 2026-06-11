@@ -4,14 +4,16 @@ using System.Text;
 
 namespace Locacao
 {
+
     internal class Cliente
     {
-        public string Name { get; set; } 
-        public int Contact { get; set; }
+        public required string Name { get; set; } 
+        public required string Contact { get; set; }
+        
 
-        public void CadastrarCliente() 
-        { 
-
+        public void CadastrarCliente(List<Cliente> ClienteList)     
+        {
+            ClienteList.Add(this);
         }
 
 
