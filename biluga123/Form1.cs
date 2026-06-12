@@ -12,6 +12,8 @@ namespace Locacao
         List<Item> ItemList = new List<Item>();
         //List <Item>ValueList = new List<Item>();
         List<Locacao> LocacaoList = new List<Locacao>();
+        //lista para a listBox de locações saiba exatamente qual linha o usuário clicou para devolver
+        List<Locacao> locacoesAtivasExibidas = new List<Locacao>();
         public Form1()
         {
             InitializeComponent();
@@ -60,11 +62,18 @@ namespace Locacao
         }
         private void AtualizarTelaClientes()
         {
+            // 1. Limpa o que estava na tela antes
             listBox1.Items.Clear();
+            comboBoxClientes.Items.Clear(); // ✨ ADICIONE ISSO: Limpa a caixinha de seleção da Aba 3
+
+            // 2. Passa de cliente em cliente na memória
             foreach (Cliente c in ClienteList)
             {
-                // Exibe formatado puxando as propriedades do objeto salvo
+                // Coloca o cliente na lista visual da Aba 1
                 listBox1.Items.Add($"{c.Name} - {c.Contact}");
+
+                // ✨ ADICIONE ISSO: Coloca o nome do cliente na caixinha de seleção da Aba 3!
+                comboBoxClientes.Items.Add(c.Name);
             }
         }
 
@@ -105,16 +114,106 @@ namespace Locacao
 
         private void SandyAtualizarTelaItens() // AtualizarTelaI
         {
+            // 1. Limpa o que estava na tela antes
             listBox2.Items.Clear();
+            comboBoxItens.Items.Clear(); // ✨ ADICIONE ISSO: Limpa a caixinha de seleção da Aba 3
+
+            // 2. Passa de item em item na memória
             foreach (Item item in ItemList)
             {
+                // Coloca o item na lista visual da Aba 2
                 listBox2.Items.Add($"{item.NameI} - {item.ValueI:C} / dia");
+
+                // ✨ ADICIONE ISSO: Coloca o nome do item na caixinha de seleção da Aba 3!
+                comboBoxItens.Items.Add(item.NameI);
             }
         }
 
         private void AtualizarTelaItens() => SandyAtualizarTelaItens();
 
+        // ==================== ABA 3: LOCAÇÕES (Para você associar aos seus controles) ====================
+        private void RegistrarNovaLocacao(Cliente cliente, Item item, DateTime inicio, DateTime fim)
+        {
+            Locacao novaLocacao = new Locacao
+            {
+                ClienteLocacao = cliente,
+                ItemLocacao = item,
+                DataRetirada = inicio,
+                DataPrevistaDevolucao = fim,
+                DataDevolucao = null // Nova locação entra como ativa
+            };
 
+            LocacaoList.Add(novaLocacao);
+
+            decimal valorTotal = novaLocacao.CalcularValorTotal();
+            MessageBox.Show($"Locação realizada!{Environment.NewLine}Total estimado: {valorTotal:C}");
+
+            AtualizarTelaLocacoes();
+        }
+        private void button3_Click(object sender, EventArgs e)
+        {
+            // 1. Validação: Verifica se o usuário realmente selecionado um cliente e um item nos Comboboxes
+            if (comboBoxClientes.SelectedIndex == -1 || comboBoxItens.SelectedIndex == -1)
+            {
+                MessageBox.Show("Por favor, selecione um Cliente e um Item antes de alugar!", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 2. Procura os objetos reais nas listas usando a posição (índice) que o usuário clicou na tela
+            Cliente clienteSelecionado = ClienteList[comboBoxClientes.SelectedIndex];
+            Item itemSelecionado = ItemList[comboBoxItens.SelectedIndex];
+
+            // 3. Pega as datas que o usuário escolheu nos calendários (DateTimePicker)
+            DateTime dataInicio = dateTimePickerInicio.Value;
+            DateTime dataFim = dateTimePickerFim.Value;
+
+            // 4. Chama o método de registro que criamos antes!
+            RegistrarNovaLocacao(clienteSelecionado, itemSelecionado, dataInicio, dataFim);
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            // Verifica se o usuário selecionou alguma locação na lista para devolver
+            if (listBox3.SelectedIndex != -1)
+            {
+                // Encontra a locação correspondente que foi clicada
+                Locacao locacaoSelecionada = locacoesAtivasExibidas[listBox3.SelectedIndex];
+
+                // Registra a devolução colocando a data de hoje (deixa de ser Ativa!)
+                locacaoSelecionada.DataDevolucao = DateTime.Now;
+
+                MessageBox.Show("Devolução registrada com sucesso! O item foi devolvido.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Recarrega a tela. Como ela não é mais ativa, ela vai sumir da listagem!
+                AtualizarTelaLocacoes();
+            }
+            else
+            {
+                MessageBox.Show("Por favor, selecione uma locação ativa na lista para realizar a devolução.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        // Chame este método para listar apenas as locações que ainda estão ativas (requisito do briefing)
+        private void AtualizarTelaLocacoes()
+        {
+            listBox3.Items.Clear();       // Limpa o visual da lista na tela
+            locacoesAtivasExibidas.Clear();      // Limpa o nosso controle interno
+
+            foreach (Locacao loc in LocacaoList)
+            {
+                // Critério de Aceite: Só mostra se a locação estiver ATIVA (sem data de devolução)
+                if (loc.Ativa)
+                {
+                    locacoesAtivasExibidas.Add(loc); // Guarda a referência dela    
+
+                    // Calcula o valor estimado para mostrar na listagem
+                    decimal valorEstimado = loc.CalcularValorTotal();
+
+                    listBox3.Items.Add($"{loc.ClienteLocacao.Name} -> {loc.ItemLocacao.NameI} (Total: {valorEstimado:C})");
+                }
+            }
+        }
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -241,7 +340,19 @@ namespace Locacao
 
         }
 
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
 
+        }
 
+        private void label9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label10_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
