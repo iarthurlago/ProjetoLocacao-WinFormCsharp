@@ -39,7 +39,9 @@
             listBox1 = new ListBox();
             tabControl1 = new TabControl();
             tabPage11 = new TabPage();
+            buttonCancel = new Button();
             tabPage2 = new TabPage();
+            buttonCancel2 = new Button();
             listBox2 = new ListBox();
             button2 = new Button();
             label7 = new Label();
@@ -156,6 +158,7 @@
             listBox1.Name = "listBox1";
             listBox1.Size = new Size(137, 124);
             listBox1.TabIndex = 6;
+            listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged_1;
             // 
             // tabControl1
             // 
@@ -171,6 +174,7 @@
             // 
             // tabPage11
             // 
+            tabPage11.Controls.Add(buttonCancel);
             tabPage11.Controls.Add(label1);
             tabPage11.Controls.Add(label5);
             tabPage11.Controls.Add(listBox1);
@@ -190,8 +194,20 @@
             tabPage11.UseVisualStyleBackColor = true;
             tabPage11.Click += tabPage1_Click;
             // 
+            // buttonCancel
+            // 
+            buttonCancel.Location = new Point(376, 286);
+            buttonCancel.Name = "buttonCancel";
+            buttonCancel.Size = new Size(137, 29);
+            buttonCancel.TabIndex = 7;
+            buttonCancel.Text = "Cancelar Edicao";
+            buttonCancel.UseVisualStyleBackColor = true;
+            buttonCancel.Visible = false;
+            buttonCancel.Click += buttonCancel_Click;
+            // 
             // tabPage2
             // 
+            tabPage2.Controls.Add(buttonCancel2);
             tabPage2.Controls.Add(listBox2);
             tabPage2.Controls.Add(button2);
             tabPage2.Controls.Add(label7);
@@ -208,6 +224,16 @@
             tabPage2.UseVisualStyleBackColor = true;
             tabPage2.Click += tabPage2_Click;
             // 
+            // buttonCancel2
+            // 
+            buttonCancel2.Location = new Point(521, 259);
+            buttonCancel2.Name = "buttonCancel2";
+            buttonCancel2.Size = new Size(150, 29);
+            buttonCancel2.TabIndex = 4;
+            buttonCancel2.Text = "Cancelar Edicao";
+            buttonCancel2.UseVisualStyleBackColor = true;
+            buttonCancel2.Click += buttonCancel2_Click;
+            // 
             // listBox2
             // 
             listBox2.FormattingEnabled = true;
@@ -215,6 +241,7 @@
             listBox2.Name = "listBox2";
             listBox2.Size = new Size(150, 104);
             listBox2.TabIndex = 3;
+            listBox2.SelectedIndexChanged += listBox2_SelectedIndexChanged_1;
             // 
             // button2
             // 
@@ -441,5 +468,7 @@
         private ComboBox comboBoxItens;
         private ComboBox comboBoxClientes;
         private Button button4;
+        private Button buttonCancel;
+        private Button buttonCancel2;
     }
 }

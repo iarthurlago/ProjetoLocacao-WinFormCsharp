@@ -1,37 +1,65 @@
+using System.Net.Mime;
 using System.Runtime.CompilerServices;
+using System.Security.AccessControl;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
 
 namespace Locacao
 {
     public partial class Form1 : Form
     {
-        // 1.lista aqui fora para guardar os dados na memória do Form de Clientes
+        // Listas que funcionam como nosso banco de dados em memória
         List<Cliente> ClienteList = new List<Cliente>();
-        //List<Cliente> ContactList = new List<Cliente>();
-        // 2.lista aqui fora para guardar os dados na memória do Form de Itens
         List<Item> ItemList = new List<Item>();
-        //List <Item>ValueList = new List<Item>();
         List<Locacao> LocacaoList = new List<Locacao>();
-        //lista para a listBox de locações saiba exatamente qual linha o usuário clicou para devolver
+
+        // Lista auxiliar para referenciar exatamente as locações listadas na tela
         List<Locacao> locacoesAtivasExibidas = new List<Locacao>();
+
+        int indiceParaEditarCliente = -1;
+        int indiceParaEditar = -1;
+
         public Form1()
         {
             InitializeComponent();
         }
 
+        // ==================== ABA 1: CLIENTES ====================
+
+        // Botão de cadastrar cliente
         private async void button1_Click(object sender, EventArgs e)
         {
-            //Dados
+            // Coleta os dados digitados
             string nameType = textBox1.Text;
             string ContactType = textBox2.Text;
 
+
+            // Valida se os campos não estão vazios
             if (!string.IsNullOrEmpty(nameType) && !string.IsNullOrEmpty(ContactType))
             {
-                Cliente novoCliente = new Cliente { Name = nameType, Contact = ContactType };
-                novoCliente.CadastrarCliente(ClienteList);
+                if (indiceParaEditarCliente == -1)
+                {
+                    // === MODO CADASTRO ===
+                    Cliente novoCliente = new Cliente { Name = nameType, Contact = ContactType };
+                    novoCliente.CadastrarCliente(ClienteList);
+                    MessageBox.Show("Cliente cadastrado com sucesso!");
+                }
+                else
+                {
+                    // === MODO EDIÇÃO ===
+                    Cliente clienteAtual = ClienteList[indiceParaEditarCliente];
+                    clienteAtual.Name = nameType;
+                    clienteAtual.Contact = ContactType;
+
+                    MessageBox.Show("Cadastro atualizado com sucesso!");
+
+                    // Reseta o botão para o modo cadastro
+                    indiceParaEditarCliente = -1;
+                    button1.Text = "Cadastrar";
+                    button1.BackColor = SystemColors.Control;
+                }
 
 
-                //Fields and customs
+                // Atualiza o estado da interface (feedback visual de sucesso)
                 button1.Enabled = false;
                 label3.Text = "✔";
                 label4.Text = "✔";
@@ -40,58 +68,107 @@ namespace Locacao
 
                 MessageBox.Show("Você cadastrou o cliente: " + nameType + Environment.NewLine + "Número digitado: " + ContactType);
 
+                // Limpa os campos e atualiza a listagem na tela
                 textBox1.Clear();
                 textBox2.Clear();
                 AtualizarTelaClientes();
 
-                //await pra evitar miss click
+                // Pausa de 2 segundos para evitar cliques duplos acidentais, depois restaura a UI
                 await Task.Delay(2000);
                 button1.Enabled = true;
                 label5.Text = "Pronto para um novo cadastro.";
                 label5.ForeColor = Color.Black;
-                // Criando o objeto e passando o texto dos inputs direto para o construtor
             }
             else
             {
-                // Se estiver vazio, avisa o usuário
+                // Feedback de erro caso os campos estejam vazios
                 MessageBox.Show("Nome ou Contato incorreto", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 label5.Text = "Seu Nome ou Telefone estão incorretos";
                 label5.ForeColor = Color.Red;
             }
+        }
+
+        private void listBox1_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedIndex != -1)
+            {
+                buttonCancel.Visible = true; // Exibe o botão de cancelar edição
+                // 1. Guarda o índice na variável global
+                indiceParaEditarCliente = listBox1.SelectedIndex;
+
+                // 2. Recupera o objeto Cliente da lista original
+                Cliente clienteSelecionado = ClienteList[indiceParaEditarCliente];
+
+                // 3. Preenche as caixas de texto com os dados atuais
+                textBox1.Text = clienteSelecionado.Name;
+                textBox2.Text = clienteSelecionado.Contact;
+
+                // 4. Muda o texto do botão para indicar a ação
+                MessageBox.Show($"Cliente selecionado: {clienteSelecionado.Name}\nContato: {clienteSelecionado.Contact}");
+                button1.Text = "Editar";
+            }
 
         }
+
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            indiceParaEditarCliente = -1;
+            button1.Text = "Cadastrar";
+            button1.BackColor = SystemColors.Control;
+            textBox1.Clear();
+            textBox2.Clear();
+        }
+
+        // Sincroniza a lista de clientes da memória com os componentes visuais
         private void AtualizarTelaClientes()
         {
-            // 1. Limpa o que estava na tela antes
             listBox1.Items.Clear();
-            comboBoxClientes.Items.Clear(); // ✨ ADICIONE ISSO: Limpa a caixinha de seleção da Aba 3
+            comboBoxClientes.Items.Clear();
 
-            // 2. Passa de cliente em cliente na memória
             foreach (Cliente c in ClienteList)
             {
-                // Coloca o cliente na lista visual da Aba 1
                 listBox1.Items.Add($"{c.Name} - {c.Contact}");
-
-                // ✨ ADICIONE ISSO: Coloca o nome do cliente na caixinha de seleção da Aba 3!
                 comboBoxClientes.Items.Add(c.Name);
             }
         }
 
         // ==================== ABA 2: ITENS ====================
+
+        // Botão de cadastrar item
         private async void button2_Click(object sender, EventArgs e)
         {
-            //Dados
             string nameItem = textBox5.Text;
             decimal valorDiaria;
 
-            // Valida se o nome não está vazio e se o valor digitado no textBox3 é um número válido
+            // Valida preenchimento e tenta converter o texto do valor para decimal
             if (!string.IsNullOrEmpty(nameItem) && decimal.TryParse(textBox3.Text, out valorDiaria))
             {
-                Item novoItem = new Item { NameI = nameItem, ValueI = valorDiaria };
-                novoItem.CadastrarItem(ItemList);
+
+                if (indiceParaEditar == -1)
+                {
+                    // === MODO CADASTRO ===
+                    // Cria e salva o novo item
+                    Item novoItem = new Item { NameI = nameItem, ValueI = valorDiaria };
+                    novoItem.CadastrarItem(ItemList);
+                    MessageBox.Show("Item cadastrado com sucesso!");
+                }
+                else
+                {
+                    // === MODO EDIÇÃO ===
+                    Item itemAtual = ItemList[indiceParaEditar];
+                    itemAtual.NameI = nameItem;
+                    itemAtual.ValueI = valorDiaria;
+
+                    MessageBox.Show("Item atualizado com sucesso!");
+
+                    // Reseta o botão para o modo cadastro
+                    indiceParaEditar = -1;
+                    button2.Text = "Cadastrar";
+                    button2.BackColor = SystemColors.Control;
+                }
 
 
-                //Fields and customs
+                // Feedback visual e atualização da lista
                 button2.Enabled = false;
                 MessageBox.Show("Você cadastrou o item: " + nameItem + Environment.NewLine + "Valor digitado: " + valorDiaria);
 
@@ -99,39 +176,64 @@ namespace Locacao
                 textBox3.Clear();
                 AtualizarTelaItens();
 
-                //await pra evitar miss click
                 await Task.Delay(2000);
                 button2.Enabled = true;
             }
             else
             {
-                // Se estiver vazio, avisa o usuário
                 MessageBox.Show("Nome ou Valor incorreto", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
             }
-
         }
 
-        private void SandyAtualizarTelaItens() // AtualizarTelaI
+        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // 1. Limpa o que estava na tela antes
-            listBox2.Items.Clear();
-            comboBoxItens.Items.Clear(); // ✨ ADICIONE ISSO: Limpa a caixinha de seleção da Aba 3
+            if (listBox2.SelectedIndex != -1)
+            {
+                buttonCancel2.Visible = true; // Exibe o botão de cancelar edição
+                // 1. Guarda o índice na variável global
+                indiceParaEditar = listBox2.SelectedIndex;
 
-            // 2. Passa de item em item na memória
+                // 2. Recupera o objeto Cliente da lista original
+                Item itemSelecionado = ItemList[indiceParaEditar];
+
+                // 3. Preenche as caixas de texto com os dados atuais
+                textBox5.Text = itemSelecionado.NameI;
+                textBox3.Text = itemSelecionado.ValueI.ToString();
+
+                // 4. Muda o texto do botão para indicar a ação
+                MessageBox.Show($"Cliente selecionado: {itemSelecionado.NameI}\nContato: {itemSelecionado.ValueI}");
+                button2.Text = "Editar Cliente";
+            }
+        }
+        private void buttonCancel2_Click(object sender, EventArgs e)
+        {
+            indiceParaEditar = -1;
+            button2.Text = "Cadastrar";
+            button2.BackColor = SystemColors.Control;
+            textBox1.Clear();
+            textBox2.Clear();
+        }
+
+        // Sincroniza a lista de itens da memória com os componentes visuais
+        private void SandyAtualizarTelaItens()
+        {
+            listBox2.Items.Clear();
+            comboBoxItens.Items.Clear();
+
             foreach (Item item in ItemList)
             {
-                // Coloca o item na lista visual da Aba 2
                 listBox2.Items.Add($"{item.NameI} - {item.ValueI:C} / dia");
-
-                // ✨ ADICIONE ISSO: Coloca o nome do item na caixinha de seleção da Aba 3!
                 comboBoxItens.Items.Add(item.NameI);
             }
         }
 
+        // Alias para o método de atualizar itens
         private void AtualizarTelaItens() => SandyAtualizarTelaItens();
 
-        // ==================== ABA 3: LOCAÇÕES (Para você associar aos seus controles) ====================
+
+        // ==================== ABA 3: LOCAÇÕES ====================
+
+        // Método central para criar o objeto de Locação e salvar na lista
         private void RegistrarNovaLocacao(Cliente cliente, Item item, DateTime inicio, DateTime fim)
         {
             Locacao novaLocacao = new Locacao
@@ -140,7 +242,7 @@ namespace Locacao
                 ItemLocacao = item,
                 DataRetirada = inicio,
                 DataPrevistaDevolucao = fim,
-                DataDevolucao = null // Nova locação entra como ativa
+                DataDevolucao = null // Null significa que está ativa
             };
 
             LocacaoList.Add(novaLocacao);
@@ -150,42 +252,41 @@ namespace Locacao
 
             AtualizarTelaLocacoes();
         }
+
+        // Botão de realizar nova locação
         private void button3_Click(object sender, EventArgs e)
         {
-            // 1. Validação: Verifica se o usuário realmente selecionado um cliente e um item nos Comboboxes
+            // Verifica se o usuário selecionou opções válidas nos ComboBoxes
             if (comboBoxClientes.SelectedIndex == -1 || comboBoxItens.SelectedIndex == -1)
             {
                 MessageBox.Show("Por favor, selecione um Cliente e um Item antes de alugar!", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // 2. Procura os objetos reais nas listas usando a posição (índice) que o usuário clicou na tela
+            // Resgata os objetos reais usando os índices selecionados
             Cliente clienteSelecionado = ClienteList[comboBoxClientes.SelectedIndex];
             Item itemSelecionado = ItemList[comboBoxItens.SelectedIndex];
 
-            // 3. Pega as datas que o usuário escolheu nos calendários (DateTimePicker)
             DateTime dataInicio = dateTimePickerInicio.Value;
             DateTime dataFim = dateTimePickerFim.Value;
 
-            // 4. Chama o método de registro que criamos antes!
             RegistrarNovaLocacao(clienteSelecionado, itemSelecionado, dataInicio, dataFim);
-
         }
 
+        // Botão de registrar devolução de um item alugado
         private void button4_Click(object sender, EventArgs e)
         {
-            // Verifica se o usuário selecionou alguma locação na lista para devolver
+            // Verifica se alguma locação foi clicada na lista
             if (listBox3.SelectedIndex != -1)
             {
-                // Encontra a locação correspondente que foi clicada
+                // Pega a locação específica na lista auxiliar
                 Locacao locacaoSelecionada = locacoesAtivasExibidas[listBox3.SelectedIndex];
 
-                // Registra a devolução colocando a data de hoje (deixa de ser Ativa!)
+                // Marca a devolução (deixa de ser ativa)
                 locacaoSelecionada.DataDevolucao = DateTime.Now;
 
                 MessageBox.Show("Devolução registrada com sucesso! O item foi devolvido.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // Recarrega a tela. Como ela não é mais ativa, ela vai sumir da listagem!
                 AtualizarTelaLocacoes();
             }
             else
@@ -194,165 +295,59 @@ namespace Locacao
             }
         }
 
-        // Chame este método para listar apenas as locações que ainda estão ativas (requisito do briefing)
+        // Sincroniza a tela de locações exibindo APENAS as que não foram devolvidas
         private void AtualizarTelaLocacoes()
         {
-            listBox3.Items.Clear();       // Limpa o visual da lista na tela
-            locacoesAtivasExibidas.Clear();      // Limpa o nosso controle interno
+            listBox3.Items.Clear();
+            locacoesAtivasExibidas.Clear();
 
             foreach (Locacao loc in LocacaoList)
             {
-                // Critério de Aceite: Só mostra se a locação estiver ATIVA (sem data de devolução)
-                if (loc.Ativa)
+                if (loc.Ativa) // Critério de Aceite: só exibe ativas
                 {
-                    locacoesAtivasExibidas.Add(loc); // Guarda a referência dela    
+                    locacoesAtivasExibidas.Add(loc);
 
-                    // Calcula o valor estimado para mostrar na listagem
                     decimal valorEstimado = loc.CalcularValorTotal();
-
                     listBox3.Items.Add($"{loc.ClienteLocacao.Name} -> {loc.ItemLocacao.NameI} (Total: {valorEstimado:C})");
                 }
             }
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        // ==================== EVENTOS DE UI (VAZIOS / NÃO UTILIZADOS) ====================
+        // Estes métodos foram gerados pelo clique duplo no Form Designer e atualmente não executam nada.
+
+        private void label1_Click(object sender, EventArgs e) { }
+        private void label1_Click_1(object sender, EventArgs e) { }
+        private void textBox1_TextChanged(object sender, EventArgs e) { }
+        private void Form1_Load(object sender, EventArgs e) { }
+        private void label3_Click(object sender, EventArgs e) { }
+        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e) { }
+        private void FieldName_TextChanged(object sender, EventArgs e) { }
+        private void textBox1_TextChanged_1(object sender, EventArgs e) { }
+        private void textBox2_TextChanged(object sender, EventArgs e) { }
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e) { }
+        private void tabPage1_Click(object sender, EventArgs e) { }
+        private void textBox3_TextChanged(object sender, EventArgs e) { }
+        private void tabPage2_Click(object sender, EventArgs e) { }
+        private void textBox5_TextChanged(object sender, EventArgs e) { }
+        private void label6_Click(object sender, EventArgs e) { }
+        private void label7_Click(object sender, EventArgs e) { }
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e) { }
+        private void label9_Click(object sender, EventArgs e) { }
+        private void label10_Click(object sender, EventArgs e) { }
+
+        private void listBox2_SelectedIndexChanged_1(object sender, EventArgs e)
         {
 
         }
 
-        private void label1_Click_1(object sender, EventArgs e)
-        {
 
-        }
+        // ==================== CÓDIGO LEGADO (COMENTADO) ====================
+        // Blocos antigos de atualização de tela mantidos no fonte (podem ser apagados se não forem mais úteis)
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void FieldName_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
         //private void AtualizarTela()
-        //{
-        //    // PASSO CRUCIAL: Limpa a ListBox antes de redesenhar.
-        //    // Se não fizermos isso, toda vez que clicarmos no botão, 
-        //    // os nomes antigos seriam duplicados na tela.
-        //    listBox1.Items.Clear();
-
-
-        //    foreach (Cliente clienteSalvo in ClienteList)
-        //    {
-        //        // Aqui sim você junta os dados para mostrar para o usuário!
-        //        string textoParaExibir = clienteSalvo.Name + " - " + clienteSalvo.Contact;
-        //        listBox1.Items.Add(textoParaExibir);
-        //    }
-
-        //    foreach (Cliente contatinho in ContactList)
-        //    {
-        //        // ...e adiciona na ListBox da tela!
-        //        listBox1.Items.Add(contatinho);
-        //    }
-
-        //}
-
+        //...
         //private void AtualizarTelaI()
-        //{
-        //    // PASSO CRUCIAL: Limpa a ListBox antes de redesenhar.
-        //    // Se não fizermos isso, toda vez que clicarmos no botão, 
-        //    // os nomes antigos seriam duplicados na tela.
-        //    listBox2.Items.Clear();
-
-        //    // Passa de item em item da nossa lista da memória...
-        //    foreach (Item itens in ItemList)
-        //    {
-        //        // ...e adiciona na ListBox da tela!
-        //        string textoParaExibirI = itens.NameI + " - " + itens.ValueI;
-        //        listBox2.Items.Add(textoParaExibirI);
-
-        //    }
-        //    foreach (Item itenzinhos in ValueList)
-        //    {
-        //        // ...e adiciona na ListBox da tela!
-        //        listBox1.Items.Add(itenzinhos);
-        //    }
-
-        //}
-
-        private void tabPage1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tabPage2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox5_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label7_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label9_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label10_Click(object sender, EventArgs e)
-        {
-
-        }
+        //...
     }
 }
