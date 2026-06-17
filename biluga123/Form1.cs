@@ -36,9 +36,17 @@ namespace Locacao
             // Valida se os campos não estão vazios
             if (!string.IsNullOrEmpty(nameType) && !string.IsNullOrEmpty(ContactType))
             {
+                // Atualiza o estado da interface (feedback visual de sucesso)
+                button1.Enabled = false;
+                label3.Text = "✔";
+                label4.Text = "✔";
+                label5.Text = "Cadastrado com Sucesso!";
+                label5.ForeColor = Color.Green;
+
                 if (indiceParaEditarCliente == -1)
                 {
                     // === MODO CADASTRO ===
+                    button1.Enabled = false;
                     Cliente novoCliente = new Cliente { Name = nameType, Contact = ContactType };
                     novoCliente.CadastrarCliente(ClienteList);
                     MessageBox.Show("Cliente cadastrado com sucesso!");
@@ -59,12 +67,7 @@ namespace Locacao
                 }
 
 
-                // Atualiza o estado da interface (feedback visual de sucesso)
-                button1.Enabled = false;
-                label3.Text = "✔";
-                label4.Text = "✔";
-                label5.Text = "Cadastrado com Sucesso!";
-                label5.ForeColor = Color.Green;
+                
 
                 MessageBox.Show("Você cadastrou o cliente: " + nameType + Environment.NewLine + "Número digitado: " + ContactType);
 
@@ -143,6 +146,9 @@ namespace Locacao
             // Valida preenchimento e tenta converter o texto do valor para decimal
             if (!string.IsNullOrEmpty(nameItem) && decimal.TryParse(textBox3.Text, out valorDiaria))
             {
+                // Feedback visual e atualização da lista
+                button2.Enabled = false;
+                MessageBox.Show("Você cadastrou o item: " + nameItem + Environment.NewLine + "Valor digitado: " + valorDiaria);
 
                 if (indiceParaEditar == -1)
                 {
@@ -151,6 +157,7 @@ namespace Locacao
                     Item novoItem = new Item { NameI = nameItem, ValueI = valorDiaria };
                     novoItem.CadastrarItem(ItemList);
                     MessageBox.Show("Item cadastrado com sucesso!");
+                    button2.Enabled = true;
                 }
                 else
                 {
@@ -166,11 +173,6 @@ namespace Locacao
                     button2.Text = "Cadastrar";
                     button2.BackColor = SystemColors.Control;
                 }
-
-
-                // Feedback visual e atualização da lista
-                button2.Enabled = false;
-                MessageBox.Show("Você cadastrou o item: " + nameItem + Environment.NewLine + "Valor digitado: " + valorDiaria);
 
                 textBox5.Clear();
                 textBox3.Clear();
@@ -335,11 +337,6 @@ namespace Locacao
         private void numericUpDown1_ValueChanged(object sender, EventArgs e) { }
         private void label9_Click(object sender, EventArgs e) { }
         private void label10_Click(object sender, EventArgs e) { }
-
-        private void listBox2_SelectedIndexChanged_1(object sender, EventArgs e)
-        {
-
-        }
 
 
         // ==================== CÓDIGO LEGADO (COMENTADO) ====================
