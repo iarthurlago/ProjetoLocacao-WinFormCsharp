@@ -1,9 +1,10 @@
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Security.AccessControl;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
+using SystemyLocacao.Classes;
 
-namespace Locacao
+
+namespace SystemyLocacao
 {
     public partial class Form1 : Form
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Locacao.Repositorios
+namespace SystemyLocacao.Repositorios
 {
     internal class LocacaoRepository
     {

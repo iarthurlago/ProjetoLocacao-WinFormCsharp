@@ -1,4 +1,4 @@
-﻿namespace Locacao
+﻿namespace SystemyLocacao
 {
     partial class Form1
     {
@@ -229,6 +229,7 @@
             buttonCancel2.TabIndex = 4;
             buttonCancel2.Text = "Cancelar Edicao";
             buttonCancel2.UseVisualStyleBackColor = true;
+            buttonCancel2.Visible = false;
             buttonCancel2.Click += buttonCancel2_Click;
             // 
             // listBox2

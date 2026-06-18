@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Locacao.Services
+namespace SystemyLocacao.Services
 {
     internal class ItemService
     {

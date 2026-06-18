@@ -1,4 +1,4 @@
-namespace Locacao
+namespace SystemyLocacao
 {
     internal static class Program
     {

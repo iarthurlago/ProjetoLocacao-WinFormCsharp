@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Data.Sqlite;
 
-namespace Locacao.Data
+namespace SystemyLocacao.Data
 {
     public static class BancoDeDados
     {
