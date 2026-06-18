@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Locacao
+namespace Locacao.Classes
 {
     public class Item
     {

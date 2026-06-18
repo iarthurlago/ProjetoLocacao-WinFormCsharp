@@ -4,7 +4,7 @@ using System.Text;
 
 using System;
 
-namespace Locacao
+namespace Locacao.Classes
 {
     public class Locacao
     {
