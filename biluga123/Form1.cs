@@ -1,9 +1,10 @@
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Security.AccessControl;
+using Locacao.Classes;
 using SystemyLocacao.Classes;
 
-
+using EntidadeLocacao = SystemyLocacao.Classes.Locacao;
 namespace SystemyLocacao
 {
     public partial class Form1 : Form
@@ -11,10 +12,10 @@ namespace SystemyLocacao
         // Listas que funcionam como nosso banco de dados em memória
         List<Cliente> ClienteList = new List<Cliente>();
         List<Item> ItemList = new List<Item>();
-        List<Locacao> LocacaoList = new List<Locacao>();
+        List<EntidadeLocacao> LocacaoList = new List<EntidadeLocacao>();
 
         // Lista auxiliar para referenciar exatamente as locações listadas na tela
-        List<Locacao> locacoesAtivasExibidas = new List<Locacao>();
+        List<EntidadeLocacao> locacoesAtivasExibidas = new List<EntidadeLocacao>();
 
         int indiceParaEditarCliente = -1;
         int indiceParaEditar = -1;
@@ -239,7 +240,7 @@ namespace SystemyLocacao
         // Método central para criar o objeto de Locação e salvar na lista
         private void RegistrarNovaLocacao(Cliente cliente, Item item, DateTime inicio, DateTime fim)
         {
-            Locacao novaLocacao = new Locacao
+            EntidadeLocacao novaLocacao = new EntidadeLocacao
             {
                 ClienteLocacao = cliente,
                 ItemLocacao = item,
@@ -283,7 +284,7 @@ namespace SystemyLocacao
             if (listBox3.SelectedIndex != -1)
             {
                 // Pega a locação específica na lista auxiliar
-                Locacao locacaoSelecionada = locacoesAtivasExibidas[listBox3.SelectedIndex];
+                EntidadeLocacao locacaoSelecionada = locacoesAtivasExibidas[listBox3.SelectedIndex];
 
                 // Marca a devolução (deixa de ser ativa)
                 locacaoSelecionada.DataDevolucao = DateTime.Now;
@@ -304,7 +305,7 @@ namespace SystemyLocacao
             listBox3.Items.Clear();
             locacoesAtivasExibidas.Clear();
 
-            foreach (Locacao loc in LocacaoList)
+            foreach (EntidadeLocacao loc in LocacaoList)
             {
                 if (loc.Ativa) // Critério de Aceite: só exibe ativas
                 {

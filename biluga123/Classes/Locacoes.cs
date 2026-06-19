@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
 using System;
+using Locacao.Classes;
 
 namespace SystemyLocacao.Classes
 {
