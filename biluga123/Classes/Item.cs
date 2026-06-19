@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System;
 
 namespace Locacao.Classes
 {
     public class Item
     {
+        public int Id { get; set; }
         public required string NameI { get; set; }
         public required decimal ValueI { get; set; }
-
-
-        public void CadastrarItem(List<Item> ItemList)
-        {
-            ItemList.Add(this);
-        }
     }
 }

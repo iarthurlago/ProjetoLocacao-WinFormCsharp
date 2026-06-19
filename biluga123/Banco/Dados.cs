@@ -46,13 +46,14 @@ namespace SystemyLocacao.Data
                         Contato TEXT NOT NULL
                     );
 
-                    -- MELHORIA AQUI: Nomes de colunas padronizados (sem o 'I' no final)
+                    -- Itens
                     CREATE TABLE IF NOT EXISTS Itens (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         Nome TEXT NOT NULL,
                         Valor REAL NOT NULL
                     );
-
+                    
+                    --Locacoes
                     CREATE TABLE IF NOT EXISTS Locacoes (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         ClienteId INTEGER NOT NULL,

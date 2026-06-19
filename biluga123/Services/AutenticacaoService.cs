@@ -1,33 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SystemyLocacao.Classes;
+using System;
+using Locacao.Classes;
+using SystemyLocacao.Repositorios;
 
 namespace SystemyLocacao.Services
 {
     public class AutenticacaoService
     {
-        //--------Aqui Vai ser Conectado a coisas futuras, como repositorie e bcript
-        //private readonly UsuarioRepository _usuarioRepository;
+        private readonly UsuarioRepository _usuarioRepository;
 
-        //public AutenticacaoService()
-        //{
-        //    // _usuarioRepository = new UsuarioRepository();
-        //}
-
-        //public Usuario Autenticar(string login, string senhaDigitada)
-        //{
-        //    // 1. Busca o usuário no banco pelo Login
-        //    // var usuario = _usuarioRepository.BuscarPorLogin(login);
-        //    Usuario usuario = null; // MOCK TEMPORÁRIO ENQUANTO NÃO HÁ REPOSITORY
-
-        //    if (usuario == null)
-        //        return null; // Usuário não existe
-
-        //    // 2. O MOMENTO DA MÁGICA: O BCrypt verifica se a senha bate com o Hash
-        //    bool senhaCorreta = BCrypt.Net.BCrypt.Verify(senhaDigitada, usuario.SenhaHash);
-
-        //    return senhaCorreta ? usuario : null;
+        public AutenticacaoService()
+        {
+            _usuarioRepository = new UsuarioRepository();
         }
-}
 
+        /// <summary>
+        /// Valida login e senha. Retorna o Usuario se correto, null se inválido.
+        /// </summary>
+        // ADICIONADO O '?' LOGO APÓS USUARIO
+        public Usuario? Autenticar(string login, string senhaDigitada)
+        {
+            // Busca o usuário real no banco pelo login informado
+            var usuario = _usuarioRepository.BuscarPorLogin(login);
+
+            // Usuário não encontrado
+            if (usuario == null)
+                return null;
+
+            // BCrypt compara a senha digitada com o hash armazenado no banco
+            bool senhaCorreta = BCrypt.Net.BCrypt.Verify(senhaDigitada, usuario.SenhaHash);
+
+            return senhaCorreta ? usuario : null;
+        }
+    }
+}

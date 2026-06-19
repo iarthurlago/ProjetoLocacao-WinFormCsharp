@@ -8,7 +8,7 @@ namespace SystemyLocacao.Services
     public static class SessaoSistema
     {
         // Propriedade blindada: só pode ser lida por fora, alterada por dentro.
-        public static Usuario UsuarioLogado { get; private set; }
+        public static Usuario? UsuarioLogado { get; private set; }
 
         public static void IniciarSessao(Usuario usuario)
         {

@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System;
 
 namespace Locacao.Classes
 {
-
     public class Cliente
     {
-        public required string Name { get; set; } 
-        public required string Contact { get; set; }
-        
-
-        public void CadastrarCliente(List<Cliente> ClienteList)     
-        {
-            ClienteList.Add(this);
-        }
-
-
+        public int Id { get; set; }
+        public required string Nome { get; set; }
+        public required string Contato { get; set; }
     }
 }

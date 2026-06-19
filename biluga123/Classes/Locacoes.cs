@@ -1,31 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System;
 using Locacao.Classes;
 
 namespace SystemyLocacao.Classes
 {
     public class Locacao
     {
+        
+        public int id { get; set; }
         public Cliente? ClienteLocacao { get; set; }
         public Item? ItemLocacao { get; set; }
         public DateTime DataRetirada { get; set; }
         public DateTime DataPrevistaDevolucao { get; set; }
-        public DateTime? DataDevolucao { get; set; } // Nullable: se for null, significa que ainda não foi devolvido (Ativa)
+        public DateTime? DataDevolucao { get; set; }
 
-        // Propriedade que nos diz se a locação está ativa
         public bool Ativa => DataDevolucao == null;
 
-        // Requisito: O sistema calcula o valor total com base nos dias e no valor diário do item
         public decimal CalcularValorTotal()
         {
+            // Garante que não vai quebrar se tentarem calcular sem um item selecionado
+            if (ItemLocacao == null) return 0;
+
             TimeSpan diferenca = DataPrevistaDevolucao.Date - DataRetirada.Date;
             int dias = diferenca.Days;
 
-            if (dias <= 0) dias = 1; // Garante pelo menos 1 diária se pegar e devolver no mesmo dia
+            if (dias <= 0) dias = 1;
 
-            return ItemLocacao.ValueI * dias;
+            // Como usamos decimal no Service, garantimos a conversão aqui se necessário
+            return (decimal)ItemLocacao.ValueI * dias;
         }
     }
 }

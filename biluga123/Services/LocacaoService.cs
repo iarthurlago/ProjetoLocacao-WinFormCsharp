@@ -1,29 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Locacao.Classes;
-using SystemyLocacao.Classes;
-
 using System;
+using SystemyLocacao.Repositorios;
+
+// Alias resolve CS0118: evita conflito entre o namespace "SystemyLocacao.Classes.Locacao"
+// e a classe "Locacao" dentro dele.
+using EntidadeLocacao = SystemyLocacao.Classes.Locacao;
+
+// Using explícito resolve CS0229: garante que SessaoSistema vem de um único lugar.
+using SystemyLocacao.Services;
 
 namespace SystemyLocacao.Services
 {
     public class LocacaoService
     {
-        // private readonly LocacaoRepository _repository;
+        private readonly LocacaoRepository _repository;
 
         public LocacaoService()
         {
-            // _repository = new LocacaoRepository();
+            _repository = new LocacaoRepository();
         }
 
-        public void CadastrarLocacao(SystemyLocacao.Classes.Locacao locacao)
+        public void CadastrarLocacao(EntidadeLocacao locacao)
         {
-            // O fluxo fica limpo e legível
             GarantirPermissaoDeEscrita();
             ValidarDados(locacao);
 
-            // _repository.Inserir(locacao);
+            _repository.Inserir(locacao);
         }
 
         // --- MÉTODOS PRIVADOS DE APOIO ---
@@ -31,12 +32,10 @@ namespace SystemyLocacao.Services
         private void GarantirPermissaoDeEscrita()
         {
             if (!SessaoSistema.PodeEscrever)
-            {
                 throw new UnauthorizedAccessException("Acesso Negado: Seu papel (Visualizador) não permite gerar novas locações.");
-            }
         }
 
-        private void ValidarDados(SystemyLocacao.Classes.Locacao locacao)
+        private void ValidarDados(EntidadeLocacao locacao)
         {
             if (locacao.ClienteLocacao == null)
                 throw new ArgumentException("É obrigatório selecionar um cliente para a locação.");
@@ -44,8 +43,6 @@ namespace SystemyLocacao.Services
             if (locacao.ItemLocacao == null)
                 throw new ArgumentException("É obrigatório selecionar um item para a locação.");
 
-            // Regra: A data inicial não pode ser maior que a final.
-            // O .Date garante que estamos comparando apenas os dias, ignorando as horas.
             if (locacao.DataRetirada.Date > locacao.DataPrevistaDevolucao.Date)
                 throw new ArgumentException("A data de retirada não pode ser posterior à data prevista de devolução.");
         }
