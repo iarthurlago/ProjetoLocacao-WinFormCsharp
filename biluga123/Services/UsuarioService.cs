@@ -1,5 +1,6 @@
 using System;
 using Locacao.Classes;
+using SystemyLocacao.Repositorios;
 using SystemyLocacao.Services;
 
 namespace SystemyLocacao.Services

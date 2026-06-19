@@ -48,17 +48,17 @@ namespace SystemyLocacao
                 if (indiceParaEditarCliente == -1)
                 {
                     // === MODO CADASTRO ===
-                    button1.Enabled = false;
-                    Cliente novoCliente = new Cliente { Name = nameType, Contact = ContactType };
-                    novoCliente.CadastrarCliente(ClienteList);
-                    MessageBox.Show("Cliente cadastrado com sucesso!");
+                    //button1.Enabled = false;
+                    //Cliente novoCliente = new Cliente { Name = nameType, Contact = ContactType };
+                    //novoCliente.CadastrarCliente(ClienteList);
+                    //MessageBox.Show("Cliente cadastrado com sucesso!");
                 }
                 else
                 {
                     // === MODO EDIÇÃO ===
                     Cliente clienteAtual = ClienteList[indiceParaEditarCliente];
-                    clienteAtual.Name = nameType;
-                    clienteAtual.Contact = ContactType;
+                    //clienteAtual.Name = nameType;
+                    //clienteAtual.Contact = ContactType;
 
                     MessageBox.Show("Cadastro atualizado com sucesso!");
 
@@ -105,11 +105,11 @@ namespace SystemyLocacao
                 Cliente clienteSelecionado = ClienteList[indiceParaEditarCliente];
 
                 // 3. Preenche as caixas de texto com os dados atuais
-                textBox1.Text = clienteSelecionado.Name;
-                textBox2.Text = clienteSelecionado.Contact;
+                textBox1.Text = clienteSelecionado.Nome;
+                textBox2.Text = clienteSelecionado.Contato;
 
                 // 4. Muda o texto do botão para indicar a ação
-                MessageBox.Show($"Cliente selecionado: {clienteSelecionado.Name}\nContato: {clienteSelecionado.Contact}");
+                MessageBox.Show($"Cliente selecionado: {clienteSelecionado.Nome}\nContato: {clienteSelecionado.Contato}");
                 button1.Text = "Editar";
             }
 
@@ -132,8 +132,8 @@ namespace SystemyLocacao
 
             foreach (Cliente c in ClienteList)
             {
-                listBox1.Items.Add($"{c.Name} - {c.Contact}");
-                comboBoxClientes.Items.Add(c.Name);
+                listBox1.Items.Add($"{c.Nome} - {c.Contato}");
+                comboBoxClientes.Items.Add(c.Nome);
             }
         }
 
@@ -156,10 +156,10 @@ namespace SystemyLocacao
                 {
                     // === MODO CADASTRO ===
                     // Cria e salva o novo item
-                    Item novoItem = new Item { NameI = nameItem, ValueI = valorDiaria };
-                    novoItem.CadastrarItem(ItemList);
-                    MessageBox.Show("Item cadastrado com sucesso!");
-                    button2.Enabled = true;
+                    //Item novoItem = new Item { NameI = nameItem, ValueI = valorDiaria };
+                    //novoItem.CadastrarItem(ItemList);
+                    //MessageBox.Show("Item cadastrado com sucesso!");
+                    //button2.Enabled = true;
                 }
                 else
                 {
@@ -312,7 +312,7 @@ namespace SystemyLocacao
                     locacoesAtivasExibidas.Add(loc);
 
                     decimal valorEstimado = loc.CalcularValorTotal();
-                    listBox3.Items.Add($"{loc.ClienteLocacao.Name} -> {loc.ItemLocacao.NameI} (Total: {valorEstimado:C})");
+                    listBox3.Items.Add($"{loc.ClienteLocacao.Nome} -> {loc.ItemLocacao.NameI} (Total: {valorEstimado:C})");
                 }
             }
         }
